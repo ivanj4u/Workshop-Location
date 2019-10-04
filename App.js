@@ -1,11 +1,11 @@
 import React from 'react';
-import {View,StyleSheet} from 'react-native';
-import LocationApp from "./src/view/LocationApp";
+import {StyleSheet, View} from 'react-native';
+import MarkerApp from "./src/view/Marker";
 
 const App = () => {
   return (
     <View style={styles.container}>
-        <LocationApp/>
+        <MarkerApp/>
     </View>
   );
 };

@@ -1,40 +1,58 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from "react-native";
-import Mapbox from '@react-native-mapbox-gl/maps';
+import {StyleSheet, View} from "react-native";
+import MapboxGL from '@react-native-mapbox-gl/maps';
 
-Mapbox.setAccessToken("pk.eyJ1IjoiaXZhbmo0dSIsImEiOiJjazFiZ3pvNzAyZnMyM21uaXhuMHk0d21rIn0.Rvw2_qCjLFRwQIb-4W60ng");
+MapboxGL.setAccessToken("pk.eyJ1IjoiaXZhbmo0dSIsImEiOiJjazFiZ3pvNzAyZnMyM21uaXhuMHk0d21rIn0.Rvw2_qCjLFRwQIb-4W60ng");
 
-const LocationApp = () => {
+const MarkerApp = () => {
+    const listPosition = [
+        [-73.98330688476561, 40.76975180901395],
+        [-73.96682739257812, 40.761560925502806],
+        [-74.00751113891602, 40.746346606483826],
+        [-73.95343780517578, 40.7849607714286],
+        [-73.99017333984375, 40.71135347314246],
+        [-73.98880004882812, 40.758960433915284],
+        [-73.96064758300781, 40.718379593199494],
+        [-73.95172119140624, 40.82731951134558],
+        [-73.9829635620117, 40.769101775774935],
+        [-73.9822769165039, 40.76273111352534],
+        [-73.98571014404297, 40.748947591479705]
+    ];
 
-    const setLocation = (event) => {
-        const {geometry} = event;
-        setLatitude(geometry.coordinates[1]);
-        setLongitude(geometry.coordinates[0])
-    };
+    const renderAnotation = () => {
+        const items = [];
 
-    let [latitude, setLatitude] = useState("");
-    let [longitude, setLongitude] = useState("");
+        for (let i = 0; i < listPosition.length; i++) {
+            const title = 'Longitude : ' + listPosition[i][0] + ' Latitude : ' + listPosition[i][1];
+            const id = '' + i;
 
-    const renderBubble = () => {
-        return (
-            <View style={styles.bubbleContainer}>
-                <Text>Lat : {latitude}</Text>
-                <Text>Long : {longitude}</Text>
-            </View>
-        )
+            console.log(id + "-" + title);
+            items.push(
+                <MapboxGL.PointAnnotation
+                    key={id}
+                    id={id}
+                    coordinate={listPosition[i]}
+                    title={"This is a point : " + title}
+                >
+                    <MapboxGL.Callout title={title}/>
+                </MapboxGL.PointAnnotation>
+            )
+        }
+        console.log(items);
+        return items
     };
 
     return (
         <View style={styles.page}>
             <View style={styles.container}>
-                <Mapbox.MapView style={styles.map} onPress={(e) => setLocation(e)}>
-                    <Mapbox.Camera
-                        zoomLevel={15}
-                        centerCoordinate={[106.83396661466186, -6.1566922955425065]}
+                <MapboxGL.MapView style={styles.map}>
+                    <MapboxGL.Camera
+                        zoomLevel={10}
+                        centerCoordinate={listPosition[0]}
                     />
-                </Mapbox.MapView>
+                    {renderAnotation()}
+                </MapboxGL.MapView>
             </View>
-            {renderBubble()}
         </View>
     )
 };
@@ -50,18 +68,12 @@ const styles = StyleSheet.create({
     map: {
         flex: 1,
     },
-    bubbleContainer: {
-        borderRadius: 30,
-        position: 'absolute',
-        bottom: 16,
-        left: 48,
-        right: 48,
-        paddingVertical: 16,
-        minHeight: 60,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'white',
+    marker: {
+        flex: 1,
+        resizeMode: 'stretch',
+        width: 300,
+        height: 300,
     },
 });
 
-export default LocationApp;
+export default MarkerApp;
